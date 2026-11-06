@@ -1,0 +1,49 @@
+# ==============================================================================
+# ClinScribe AI — Dependencies
+# ==============================================================================
+
+# ── Core Deep Learning ──────────────────────────────────────────────────────────
+torch>=2.1.0
+torchaudio>=2.1.0
+
+# ── HuggingFace Ecosystem ───────────────────────────────────────────────────────
+transformers>=4.36.0
+datasets>=2.16.0
+accelerate>=0.25.0
+peft>=0.7.0                   # LoRA / QLoRA for parameter-efficient fine-tuning
+evaluate>=0.4.0
+tokenizers>=0.15.0
+huggingface-hub>=0.20.0
+
+# ── Audio Processing ────────────────────────────────────────────────────────────
+librosa>=0.10.1
+soundfile>=0.12.1
+audioread>=3.0.1
+
+# ── NLP & NER ───────────────────────────────────────────────────────────────────
+seqeval>=1.2.2                # Entity-level F1/Precision/Recall for NER
+nltk>=3.8.1
+rouge-score>=0.1.2            # ROUGE metrics for summarization
+sacrebleu>=2.4.0              # BLEU score
+
+# ── API & Serving ───────────────────────────────────────────────────────────────
+fastapi>=0.108.0
+uvicorn[standard]>=0.25.0
+python-multipart>=0.0.6       # File upload support for FastAPI
+pydantic>=2.5.0
+
+# ── Data Processing ─────────────────────────────────────────────────────────────
+pandas>=2.1.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+tqdm>=4.66.0
+
+# ── Visualization & Experiment Tracking ─────────────────────────────────────────
+matplotlib>=3.8.0
+seaborn>=0.13.0
+wandb>=0.16.0                 # Optional: Weights & Biases experiment tracking
+
+# ── Utilities ───────────────────────────────────────────────────────────────────
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+jiwer>=3.0.3                  # WER / CER computation for ASR

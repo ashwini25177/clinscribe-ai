@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-11-06T05:29:22Z",
+  "asr": {
+    "wer": 0.0732,
+    "cer": 0.0127,
+    "medical_keyword_recall": 0.8889,
+    "samples_evaluated": 4
+  },
+  "ner": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "accuracy": 1.0,
+    "classification_report": "              precision    recall  f1-score   support\n\n   Condition       1.00      1.00      1.00         3\n      Dosage       1.00      1.00      1.00         3\n   Frequency       1.00      1.00      1.00         2\n  Medication       1.00      1.00      1.00         3\n       Route       1.00      1.00      1.00         1\n\n   micro avg       1.00      1.00      1.00        12\n   macro avg       1.00      1.00      1.00        12\nweighted avg       1.00      1.00      1.00        12\n",
+    "samples_evaluated": 3
+  },
+  "summarizer": {
+    "rouge1": 0.5814,
+    "rouge2": 0.2604,
+    "rougeL": 0.543,
+    "bleu": 14.7389,
+    "samples_evaluated": 2
+  }
+}

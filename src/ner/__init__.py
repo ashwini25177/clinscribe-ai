@@ -1,0 +1,1 @@
+# ClinScribe AI — NER Module

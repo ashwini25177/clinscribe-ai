@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.github/
+.pytest_cache/
+tests/
+data/raw/
+data/augmented/
+benchmarks/benchmark_results.json
+*.md

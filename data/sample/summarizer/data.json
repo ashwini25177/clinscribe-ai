@@ -1,0 +1,14 @@
+[
+  {
+    "clinical_text": "Patient is a 45-year-old male presenting with persistent cough for the past two weeks. He reports mild fever, body aches, and occasional shortness of breath. No history of asthma or COPD. Vitals: BP 130/85, HR 88, Temp 100.2F, SpO2 96%. Chest X-ray shows mild bilateral infiltrates. Started on amoxicillin 500mg three times daily for 7 days. Follow-up in one week.",
+    "summary": "S: 45M with 2-week persistent cough, fever, body aches, and dyspnea. O: BP 130/85, HR 88, T 100.2F, SpO2 96%. CXR: mild bilateral infiltrates. A: Community-acquired pneumonia. P: Amoxicillin 500mg TID x 7 days, follow-up 1 week."
+  },
+  {
+    "clinical_text": "78-year-old female with a history of type 2 diabetes mellitus and hypertension presents for routine follow-up. Current medications include metformin 1000mg twice daily and lisinopril 10mg daily. HbA1c is 7.2%, up from 6.8% three months ago. Blood pressure is 142/88. Patient reports occasional dizziness and increased thirst. Fasting glucose 145 mg/dL.",
+    "summary": "S: 78F with T2DM and HTN for routine follow-up. Reports dizziness and polydipsia. O: BP 142/88, HbA1c 7.2% (was 6.8%), FBG 145. A: Suboptimal glycemic and BP control. P: Increase metformin to 1500mg BID, increase lisinopril to 20mg daily, recheck in 6 weeks."
+  },
+  {
+    "clinical_text": "32-year-old female presents with severe headache for 3 days, associated with photophobia and nausea. No aura reported. History of episodic migraines since age 20. Takes sumatriptan 50mg as needed, currently averaging 8-10 headache days per month. Neurological exam is normal. BMI 24. No papilledema on fundoscopy.",
+    "summary": "S: 32F with 3-day severe headache with photophobia and nausea. History of migraines since age 20, 8-10 headache days/month. O: Neuro exam normal, no papilledema, BMI 24. A: Chronic migraine without aura, high frequency. P: Start prophylaxis with topiramate 25mg daily, continue sumatriptan PRN, headache diary, follow-up 4 weeks."
+  }
+]

@@ -1,0 +1,48 @@
+# ==============================================================================
+# ClinScribe AI — Summarization (Flan-T5) Training Configuration
+# ==============================================================================
+
+model:
+  name: "google/flan-t5-base"          # Flan-T5 base for summarization
+  # Alternative: "facebook/bart-base"
+
+data:
+  train_dataset: "data/processed/summarizer/train"
+  eval_dataset: "data/processed/summarizer/eval"
+  max_input_length: 512                 # Max tokens for input clinical text
+  max_target_length: 150                # Max tokens for generated summary
+  source_column: "clinical_text"
+  target_column: "summary"
+  prefix: "summarize clinical note: "   # Task prefix for T5
+
+augmentation:
+  paraphrase: false                     # Back-translation based augmentation
+  random_swap: false
+
+training:
+  output_dir: "checkpoints/summarizer"
+  num_train_epochs: 5
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-5
+  warmup_steps: 200
+  weight_decay: 0.01
+  fp16: true
+  evaluation_strategy: "epoch"
+  save_strategy: "epoch"
+  save_total_limit: 3
+  logging_steps: 100
+  predict_with_generate: true
+  generation_max_length: 150
+  generation_num_beams: 4               # Beam search for better summaries
+  load_best_model_at_end: true
+  metric_for_best_model: "rouge_l"
+  greater_is_better: true
+
+evaluation:
+  metrics:
+    - "rouge1"
+    - "rouge2"
+    - "rougeL"
+    - "bleu"

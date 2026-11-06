@@ -1,0 +1,60 @@
+# ==============================================================================
+# ClinScribe AI — NER (Clinical Entity Extraction) Training Configuration
+# ==============================================================================
+
+model:
+  name: "dmis-lab/biobert-base-cased-v1.2"   # BioBERT for biomedical NER
+  # Alternative: "emilyalsentzer/Bio_ClinicalBERT"
+  num_labels: null                             # Auto-computed from label list
+
+data:
+  train_dataset: "data/processed/ner/train"
+  eval_dataset: "data/processed/ner/eval"
+  test_dataset: "data/processed/ner/test"
+  max_seq_length: 512
+  label_list:
+    - "O"
+    - "B-DRUG"
+    - "I-DRUG"
+    - "B-DOSAGE"
+    - "I-DOSAGE"
+    - "B-FORM"
+    - "I-FORM"
+    - "B-ROUTE"
+    - "I-ROUTE"
+    - "B-FREQUENCY"
+    - "I-FREQUENCY"
+    - "B-DURATION"
+    - "I-DURATION"
+    - "B-CONDITION"
+    - "I-CONDITION"
+
+augmentation:
+  synonym_replacement: true       # Replace medical terms with synonyms
+  random_insertion: false
+  back_translation: false         # Computationally expensive
+
+training:
+  output_dir: "checkpoints/ner"
+  num_train_epochs: 10
+  per_device_train_batch_size: 16
+  per_device_eval_batch_size: 16
+  learning_rate: 3.0e-5
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  fp16: true
+  evaluation_strategy: "epoch"
+  save_strategy: "epoch"
+  save_total_limit: 3
+  logging_steps: 50
+  load_best_model_at_end: true
+  metric_for_best_model: "f1"
+  greater_is_better: true
+
+evaluation:
+  metrics:
+    - "precision"
+    - "recall"
+    - "f1"
+    - "accuracy"
+  evaluation_mode: "strict"        # seqeval strict mode

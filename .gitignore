@@ -1,0 +1,46 @@
+# ── Python ──────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual Environment ────────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+
+# ── Data & Models (large files — don't commit) ─────────────────────────────────
+data/raw/
+data/processed/
+data/augmented/
+models/
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+*.onnx
+
+# ── Experiment Tracking ────────────────────────────────────────────────────────
+wandb/
+mlruns/
+experiments/results/*.json
+experiments/results/*.csv
+
+# ── IDE ─────────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ──────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Environment ────────────────────────────────────────────────────────────────
+.env
+*.env
+
+# ── Jupyter ─────────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/

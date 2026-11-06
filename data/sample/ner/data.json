@@ -1,0 +1,84 @@
+[
+  {
+    "tokens": [
+      "Patient",
+      "takes",
+      "metformin",
+      "1000mg",
+      "twice",
+      "daily",
+      "for",
+      "diabetes",
+      "."
+    ],
+    "ner_tags": [
+      "O",
+      "O",
+      "B-DRUG",
+      "B-DOSAGE",
+      "B-FREQUENCY",
+      "I-FREQUENCY",
+      "O",
+      "B-CONDITION",
+      "O"
+    ]
+  },
+  {
+    "tokens": [
+      "Prescribed",
+      "amoxicillin",
+      "500mg",
+      "oral",
+      "three",
+      "times",
+      "daily",
+      "for",
+      "7",
+      "days",
+      "."
+    ],
+    "ner_tags": [
+      "O",
+      "B-DRUG",
+      "B-DOSAGE",
+      "B-ROUTE",
+      "B-FREQUENCY",
+      "I-FREQUENCY",
+      "I-FREQUENCY",
+      "O",
+      "B-DURATION",
+      "I-DURATION",
+      "O"
+    ]
+  },
+  {
+    "tokens": [
+      "The",
+      "patient",
+      "has",
+      "hypertension",
+      "and",
+      "is",
+      "on",
+      "lisinopril",
+      "10mg",
+      "once",
+      "daily",
+      "."
+    ],
+    "ner_tags": [
+      "O",
+      "O",
+      "O",
+      "B-CONDITION",
+      "O",
+      "O",
+      "O",
+      "B-DRUG",
+      "B-DOSAGE",
+      "B-FREQUENCY",
+      "I-FREQUENCY",
+      "O"
+    ]
+  }
+]

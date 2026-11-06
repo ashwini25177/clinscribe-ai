@@ -1,0 +1,58 @@
+# ==============================================================================
+# ClinScribe AI — ASR (Whisper) Training Configuration
+# ==============================================================================
+
+model:
+  name: "openai/whisper-small"         # Base model (small for faster iteration)
+  language: "en"
+  task: "transcribe"
+
+lora:
+  enabled: true
+  r: 32                                 # LoRA rank
+  lora_alpha: 64                        # LoRA alpha scaling
+  lora_dropout: 0.05
+  target_modules:
+    - "q_proj"
+    - "v_proj"
+  bias: "none"
+
+data:
+  train_dataset: "data/processed/asr/train"
+  eval_dataset: "data/processed/asr/eval"
+  max_audio_length_seconds: 30          # Truncate audio longer than this
+  sampling_rate: 16000
+
+augmentation:
+  spec_augment: true                    # SpecAugment for audio
+  freq_mask_param: 27
+  time_mask_param: 100
+  noise_injection: false                # Set true if you have noise samples
+  speed_perturbation: [0.9, 1.0, 1.1]
+
+training:
+  output_dir: "checkpoints/asr"
+  num_train_epochs: 5
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  learning_rate: 1.0e-4
+  warmup_steps: 500
+  weight_decay: 0.01
+  fp16: true
+  evaluation_strategy: "steps"
+  eval_steps: 500
+  save_steps: 500
+  save_total_limit: 3
+  logging_steps: 100
+  predict_with_generate: true
+  generation_max_length: 225
+  load_best_model_at_end: true
+  metric_for_best_model: "wer"
+  greater_is_better: false
+  push_to_hub: false
+
+evaluation:
+  metrics:
+    - "wer"                             # Word Error Rate
+    - "cer"                             # Character Error Rate

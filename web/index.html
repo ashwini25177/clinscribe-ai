@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClinScribe AI — Clinical Speech-to-Insight Platform</title>
+  <meta name="description" content="End-to-end clinical AI system transcribing doctor-patient audio, extracting medical entities, and generating structured SOAP notes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f1d;
+      --bg-card: rgba(18, 26, 47, 0.75);
+      --bg-card-hover: rgba(25, 36, 65, 0.85);
+      --bg-elevated: #162038;
+      --border-subtle: rgba(99, 133, 219, 0.18);
+      --border-focus: rgba(56, 189, 248, 0.6);
+      
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #818cf8;
+      --accent-glow: rgba(129, 140, 248, 0.25);
+      
+      --med-color: #10b981;
+      --med-bg: rgba(16, 185, 129, 0.15);
+      --dose-color: #6366f1;
+      --dose-bg: rgba(99, 102, 241, 0.15);
+      --cond-color: #f59e0b;
+      --cond-bg: rgba(245, 158, 11, 0.15);
+      --route-color: #06b6d4;
+      --route-bg: rgba(6, 182, 212, 0.15);
+      --event-color: #ec4899;
+      --event-bg: rgba(236, 72, 153, 0.15);
+
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 15% 15%, #0f1c3f 0%, #0a0f1d 50%, #05070e 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container & Layout */
+    .app-container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px 24px 60px 24px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-title h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #34d399;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Grid Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-glass);
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: #e2e8f0;
+    }
+
+    /* Input Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: rgba(10, 15, 29, 0.6);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-elevated);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Quick Sample Buttons */
+    .sample-pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .sample-pill {
+      font-size: 11px;
+      padding: 5px 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sample-pill:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    /* Textarea */
+    .clinical-textarea {
+      width: 100%;
+      height: 200px;
+      background: rgba(10, 15, 29, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--text-main);
+      resize: vertical;
+      transition: border 0.2s;
+    }
+
+    .clinical-textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    /* Audio Dropzone */
+    .dropzone {
+      border: 2px dashed var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 36px 20px;
+      text-align: center;
+      background: rgba(10, 15, 29, 0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .dropzone-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    /* Options & Button */
+    .form-options {
+      margin: 16px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-options label {
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(2, 132, 199, 0.55);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Results Panel */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    /* Highlighted Document Area */
+    .document-preview {
+      background: rgba(10, 15, 29, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      font-size: 14.5px;
+      line-height: 1.8;
+      min-height: 120px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    /* Entity Badges */
+    .entity-tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin: 0 2px;
+      border: 1px solid transparent;
+    }
+
+    .entity-tag.medication {
+      background: var(--med-bg);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .entity-tag.dosage {
+      background: var(--dose-bg);
+      color: #a5b4fc;
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .entity-tag.condition, .entity-tag.history {
+      background: var(--cond-bg);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .entity-tag.administration, .entity-tag.route {
+      background: var(--route-bg);
+      color: #22d3ee;
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .entity-tag.other {
+      background: var(--event-bg);
+      color: #f472b6;
+      border-color: rgba(236, 72, 153, 0.4);
+    }
+
+    /* Legend */
+    .entity-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* SOAP Note Quadrants */
+    .soap-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .soap-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .soap-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .soap-card:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .soap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .soap-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .soap-tag.s { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .soap-tag.o { background: rgba(129, 140, 248, 0.2); color: #818cf8; }
+    .soap-tag.a { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .soap-tag.p { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+    .soap-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .soap-content {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      min-height: 50px;
+    }
+
+    /* Metrics Bar */
+    .metrics-bar {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 18px;
+      background: rgba(10, 15, 29, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .metric-item strong {
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    /* JSON Drawer & Code */
+    .code-block {
+      background: #060913;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      max-height: 220px;
+      overflow: auto;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🩺</div>
+        <div class="brand-title">
+          <h1>ClinScribe AI</h1>
+          <p>Clinical Speech-to-Insight & SOAP Documentation Engine</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="badge-status">
+          <span class="status-dot"></span>
+          <span>Pipeline Ready</span>
+        </div>
+        <a href="/docs" target="_blank" class="btn-secondary" id="docs-btn">
+          <span>📚 API Docs</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-grid">
+      <!-- Input Column -->
+      <section class="glass-card" aria-label="Input Controls">
+        <h2 class="card-title">
+          <span>🎙️ Clinical Consultation Input</span>
+        </h2>
+
+        <!-- Tabs -->
+        <div class="tabs-nav" role="tablist">
+          <button class="tab-btn active" id="tab-text-btn" onclick="switchTab('text')">
+            <span>📝 Text / Dictation</span>
+          </button>
+          <button class="tab-btn" id="tab-audio-btn" onclick="switchTab('audio')">
+            <span>🎤 Audio File</span>
+          </button>
+        </div>
+
+        <!-- Sample Selector -->
+        <div style="margin-bottom: 8px;">
+          <span style="font-size: 11.5px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Quick Presets:</span>
+        </div>
+        <div class="sample-pill-group">
+          <button class="sample-pill" onclick="loadSample(1)">Cardiology (Metformin & Lisinopril)</button>
+          <button class="sample-pill" onclick="loadSample(2)">Pulmonology (Asthma & Albuterol)</button>
+          <button class="sample-pill" onclick="loadSample(3)">Endocrinology (Diabetes follow-up)</button>
+        </div>
+
+        <!-- Text Input Tab Pane -->
+        <div id="pane-text">
+          <textarea id="clinical-input-text" class="clinical-textarea" placeholder="Paste doctor dictation or patient consultation transcript here..."></textarea>
+        </div>
+
+        <!-- Audio Input Tab Pane -->
+        <div id="pane-audio" style="display: none;">
+          <div class="dropzone" id="audio-dropzone" onclick="document.getElementById('audio-file-input').click()">
+            <div class="dropzone-icon">📁</div>
+            <strong style="font-size: 13.5px;">Click to select clinical audio</strong>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports WAV, MP3, FLAC (16kHz recommended)</p>
+            <input type="file" id="audio-file-input" accept="audio/*" style="display: none;" onchange="handleAudioSelect(this)">
+          </div>
+          <div id="audio-file-info" style="font-size: 12px; color: var(--primary); margin-bottom: 12px; display: none;"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="form-options">
+          <label>
+            <input type="checkbox" id="soap-toggle" checked>
+            <span>Decompose into 4-Quadrant SOAP Note</span>
+          </label>
+        </div>
+
+        <!-- Run Action Button -->
+        <button class="btn-primary" id="run-btn" onclick="runAnalysis()">
+          <span id="btn-icon">⚡</span>
+          <span id="btn-text">Generate Clinical Insights</span>
+        </button>
+      </section>
+
+      <!-- Output Column -->
+      <section class="results-grid" aria-label="Results & Insights">
+        <!-- Entities & Transcript Card -->
+        <div class="glass-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 class="card-title" style="margin-bottom: 0;">
+              <span>🏷️ Extracted Medical Entities</span>
+            </h2>
+            <span id="entity-counter" style="font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(56, 189, 248, 0.1); padding: 4px 10px; border-radius: 12px;">
+              0 Entities Found
+            </span>
+          </div>
+
+          <!-- Legend -->
+          <div class="entity-legend">
+            <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span>Medication</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #6366f1;"></span>Dosage</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span>Condition/History</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #06b6d4;"></span>Administration/Route</div>
+          </div>
+
+          <!-- Highlighted Text -->
+          <div class="document-preview" id="highlighted-preview">
+            <em style="color: var(--text-dim);">Run an analysis to view parsed transcript with highlighted clinical entities...</em>
+          </div>
+
+          <!-- Structured SOAP Note Section -->
+          <h2 class="card-title" style="margin-top: 24px; margin-bottom: 12px;">
+            <span>📋 Clinical SOAP Documentation</span>
+          </h2>
+          <div class="soap-container">
+            <div class="soap-card">
+              <div class="soap-header">
+                <span class="soap-title">Subjective</span>
+                <span class="soap-tag s">S</span>
+              </div>
+              <div class="soap-content" id="soap-s">Awaiting analysis...</div>
+            </div>
+
+            <div class="soap-card">
+              <div class="soap-header">
+                <span class="soap-title">Objective</span>
+                <span class="soap-tag o">O</span>
+              </div>
+              <div class="soap-content" id="soap-o">Awaiting analysis...</div>
+            </div>
+
+            <div class="soap-card">
+              <div class="soap-header">
+                <span class="soap-title">Assessment</span>
+                <span class="soap-tag a">A</span>
+              </div>
+              <div class="soap-content" id="soap-a">Awaiting analysis...</div>
+            </div>
+
+            <div class="soap-card">
+              <div class="soap-header">
+                <span class="soap-title">Plan</span>
+                <span class="soap-tag p">P</span>
+              </div>
+              <div class="soap-content" id="soap-p">Awaiting analysis...</div>
+            </div>
+          </div>
+
+          <!-- Metrics Bar -->
+          <div class="metrics-bar" id="metrics-bar" style="display: none;">
+            <div class="metric-item">Latency: <strong id="latency-val">0.0s</strong></div>
+            <div class="metric-item">Words: <strong id="words-val">0</strong></div>
+            <div class="metric-item">Pipeline Mode: <strong id="mode-val">Text NLP</strong></div>
+          </div>
+
+          <!-- Export & Action Bar -->
+          <div style="display: flex; gap: 12px; margin-top: 18px;">
+            <button class="btn-secondary" id="export-fhir-btn" onclick="exportFHIR()" style="flex: 1; justify-content: center;">
+              <span>📦 Export HL7 FHIR R4 Bundle</span>
+            </button>
+            <button class="btn-secondary" id="copy-soap-btn" onclick="copySOAP()" style="flex: 1; justify-content: center;">
+              <span>📋 Copy SOAP Note</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SAMPLES = {
+      1: "Patient is a 58-year-old male with type 2 diabetes and hypertension. Prescribed Metformin 500mg orally twice daily and Lisinopril 10mg once daily. Follow up in four weeks for lab tests.",
+      2: "Patient presents with acute shortness of breath and wheezing. Diagnosed with mild asthma exacerbation. Administer Albuterol 2.5mg nebulizer inhalation every 4 hours PRN. Advised to rest and hydrate.",
+      3: "A 62-year-old female presents for routine follow-up of diabetic neuropathy. Current medications include Gabapentin 300mg orally at bedtime and Atorvastatin 20mg once daily. Blood sugar remains stable."
+    };
+
+    let currentTab = 'text';
+    let selectedAudioFile = null;
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-text-btn').classList.toggle('active', tab === 'text');
+      document.getElementById('tab-audio-btn').classList.toggle('active', tab === 'audio');
+      document.getElementById('pane-text').style.display = tab === 'text' ? 'block' : 'none';
+      document.getElementById('pane-audio').style.display = tab === 'audio' ? 'block' : 'none';
+    }
+
+    function loadSample(id) {
+      switchTab('text');
+      document.getElementById('clinical-input-text').value = SAMPLES[id];
+    }
+
+    function handleAudioSelect(input) {
+      if (input.files && input.files[0]) {
+        selectedAudioFile = input.files[0];
+        const info = document.getElementById('audio-file-info');
+        info.innerText = `Selected: ${selectedAudioFile.name} (${Math.round(selectedAudioFile.size / 1024)} KB)`;
+        info.style.display = 'block';
+      }
+    }
+
+    // Pre-load Sample 1
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSample(1);
+    });
+
+    async function runAnalysis() {
+      const btn = document.getElementById('run-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+      const soapToggle = document.getElementById('soap-toggle').checked;
+      
+      btn.disabled = true;
+      btnText.innerText = 'Extracting Clinical Insights...';
+      btnIcon.innerHTML = '<div class="spinner"></div>';
+      
+      const startTime = performance.now();
+
+      try {
+        if (currentTab === 'text') {
+          const text = document.getElementById('clinical-input-text').value.trim();
+          if (!text) {
+            alert('Please provide consultation text.');
+            return;
+          }
+
+          // Call NER endpoint
+          const nerRes = await fetch('/extract-entities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+          });
+          const nerData = await nerRes.json();
+
+          // Call Summarize endpoint
+          const sumRes = await fetch('/summarize', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text, generate_soap: soapToggle })
+          });
+          const sumData = await sumRes.json();
+
+          renderResults(text, nerData.entities, sumData, performance.now() - startTime, 'Text NLP');
+        } else {
+          if (!selectedAudioFile) {
+            alert('Please select an audio file first.');
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('audio', selectedAudioFile);
+          formData.append('generate_soap', soapToggle);
+
+          const res = await fetch('/analyze', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          renderResults(data.transcript, data.entities, { soap: data.soap, summary: data.summary }, performance.now() - startTime, 'End-to-End Audio');
+        }
+      } catch (err) {
+        console.error('Analysis error:', err);
+        alert('Error connecting to pipeline: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btnText.innerText = 'Generate Clinical Insights';
+        btnIcon.innerText = '⚡';
+      }
+    }
+
+    function renderResults(transcript, entities, summaryData, latencyMs, mode) {
+      // 1. Counter
+      document.getElementById('entity-counter').innerText = `${entities.length} Entities Found`;
+
+      // 2. Highlighting
+      const preview = document.getElementById('highlighted-preview');
+      let annotated = transcript;
+
+      // Sort entities descending by length to avoid partial replacements
+      const sorted = [...entities].sort((a, b) => b.text.length - a.text.length);
+      sorted.forEach(ent => {
+        let cls = 'other';
+        const lbl = (ent.label || '').toLowerCase();
+        if (lbl.includes('med') || lbl.includes('drug')) cls = 'medication';
+        else if (lbl.includes('dos') || lbl.includes('strength')) cls = 'dosage';
+        else if (lbl.includes('cond') || lbl.includes('hist') || lbl.includes('disease') || lbl.includes('symptom')) cls = 'condition';
+        else if (lbl.includes('admin') || lbl.includes('route') || lbl.includes('oral')) cls = 'administration';
+
+        const tag = `<span class="entity-tag ${cls}" title="${ent.label} (${Math.round((ent.score||0)*100)}%)">${ent.text}</span>`;
+        annotated = annotated.replace(new RegExp(`\\b${ent.text}\\b`, 'gi'), tag);
+      });
+      preview.innerHTML = annotated;
+
+      // 3. SOAP Note
+      const soap = summaryData.soap || {};
+      document.getElementById('soap-s').innerText = soap.S || 'No subjective complaints recorded.';
+      document.getElementById('soap-o').innerText = soap.O || 'No objective findings recorded.';
+      document.getElementById('soap-a').innerText = soap.A || summaryData.summary || 'Clinical assessment pending.';
+      document.getElementById('soap-p').innerText = soap.P || 'Continue current management plan.';
+
+      // 4. Metrics Bar
+      document.getElementById('latency-val').innerText = `${(latencyMs / 1000).toFixed(2)}s`;
+      document.getElementById('words-val').innerText = transcript.split(/\s+/).length;
+      document.getElementById('mode-val').innerText = mode;
+      document.getElementById('metrics-bar').style.display = 'flex';
+    }
+
+    async function exportFHIR() {
+      const text = document.getElementById('clinical-input-text').value.trim();
+      if (!text) {
+        alert('Please run an analysis or enter consultation text first.');
+        return;
+      }
+      try {
+        const res = await fetch('/export-fhir', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const bundle = await res.json();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bundle, null, 2));
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", `clinscribe-fhir-bundle-${Date.now()}.json`);
+        document.body.appendChild(dl);
+        dl.click();
+        dl.remove();
+      } catch (err) {
+        alert('FHIR export error: ' + err.message);
+      }
+    }
+
+    function copySOAP() {
+      const s = document.getElementById('soap-s').innerText;
+      const o = document.getElementById('soap-o').innerText;
+      const a = document.getElementById('soap-a').innerText;
+      const p = document.getElementById('soap-p').innerText;
+      const note = `CLINICAL SOAP NOTE\n==================\n\n[SUBJECTIVE]\n${s}\n\n[OBJECTIVE]\n${o}\n\n[ASSESSMENT]\n${a}\n\n[PLAN]\n${p}\n`;
+      navigator.clipboard.writeText(note);
+      alert('✅ Clinical SOAP Note copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
