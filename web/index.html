@@ -1,46 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClinScribe AI — Clinical Speech-to-Insight Platform</title>
-  <meta name="description" content="End-to-end clinical AI system transcribing doctor-patient audio, extracting medical entities, and generating structured SOAP notes.">
+  <title>ClinScribe AI — Clinical Speech-to-Insight & SOAP Documentation</title>
+  <meta name="description" content="AI platform for clinical speech transcription, medical entity extraction, and automated SOAP note generation with HL7 FHIR R4 interoperability.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0a0f1d;
-      --bg-card: rgba(18, 26, 47, 0.75);
-      --bg-card-hover: rgba(25, 36, 65, 0.85);
-      --bg-elevated: #162038;
-      --border-subtle: rgba(99, 133, 219, 0.18);
-      --border-focus: rgba(56, 189, 248, 0.6);
+      /* Light Clinical Theme (Default) */
+      --bg-main: #f8fafc;
+      --bg-gradient: radial-gradient(circle at 10% 10%, #eff6ff 0%, #f8fafc 45%, #f1f5f9 100%);
+      --bg-card: #ffffff;
+      --bg-card-hover: #fbfcfe;
+      --bg-elevated: #f1f5f9;
+      --border-subtle: #e2e8f0;
+      --border-focus: #0284c7;
       
-      --primary: #38bdf8;
-      --primary-glow: rgba(56, 189, 248, 0.25);
-      --accent: #818cf8;
-      --accent-glow: rgba(129, 140, 248, 0.25);
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-glow: rgba(2, 132, 199, 0.15);
+      --accent: #4f46e5;
       
-      --med-color: #10b981;
-      --med-bg: rgba(16, 185, 129, 0.15);
-      --dose-color: #6366f1;
-      --dose-bg: rgba(99, 102, 241, 0.15);
-      --cond-color: #f59e0b;
-      --cond-bg: rgba(245, 158, 11, 0.15);
-      --route-color: #06b6d4;
-      --route-bg: rgba(6, 182, 212, 0.15);
-      --event-color: #ec4899;
-      --event-bg: rgba(236, 72, 153, 0.15);
+      /* High-contrast clinical entity colors for light theme */
+      --med-color: #065f46;
+      --med-bg: #ecfdf5;
+      --med-border: #a7f3d0;
 
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      --dose-color: #3730a3;
+      --dose-bg: #eef2ff;
+      --dose-border: #c7d2fe;
+
+      --cond-color: #92400e;
+      --cond-bg: #fffbeb;
+      --cond-border: #fde68a;
+
+      --route-color: #155e75;
+      --route-bg: #ecfeff;
+      --route-border: #a5f3fc;
+
+      --event-color: #9d174d;
+      --event-bg: #fdf2f8;
+      --event-border: #fbcfe8;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
       
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      --shadow-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #0a0f1d;
+      --bg-gradient: radial-gradient(circle at 15% 15%, #0f1c3f 0%, #0a0f1d 50%, #05070e 100%);
+      --bg-card: rgba(18, 26, 47, 0.85);
+      --bg-card-hover: rgba(25, 36, 65, 0.95);
+      --bg-elevated: #162038;
+      --border-subtle: rgba(99, 133, 219, 0.22);
+      --border-focus: rgba(56, 189, 248, 0.6);
+      
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #818cf8;
+
+      --med-color: #34d399;
+      --med-bg: rgba(16, 185, 129, 0.16);
+      --med-border: rgba(16, 185, 129, 0.4);
+
+      --dose-color: #a5b4fc;
+      --dose-bg: rgba(99, 102, 241, 0.16);
+      --dose-border: rgba(99, 102, 241, 0.4);
+
+      --cond-color: #fbbf24;
+      --cond-bg: rgba(245, 158, 11, 0.16);
+      --cond-border: rgba(245, 158, 11, 0.4);
+
+      --route-color: #22d3ee;
+      --route-bg: rgba(6, 182, 212, 0.16);
+      --route-border: rgba(6, 182, 212, 0.4);
+
+      --event-color: #f472b6;
+      --event-bg: rgba(236, 72, 153, 0.16);
+      --event-border: rgba(236, 72, 153, 0.4);
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -51,16 +106,17 @@
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 15% 15%, #0f1c3f 0%, #0a0f1d 50%, #05070e 100%);
+      background: var(--bg-gradient);
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
       -webkit-font-smoothing: antialiased;
     }
 
     /* Container & Layout */
     .app-container {
-      max-width: 1360px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 24px 24px 60px 24px;
     }
@@ -70,9 +126,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 24px;
-      margin-bottom: 28px;
+      padding-bottom: 20px;
+      margin-bottom: 26px;
       border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .brand {
@@ -82,36 +140,35 @@
     }
 
     .brand-icon {
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, #0284c7, #6366f1);
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 0 20px var(--primary-glow);
+      font-size: 24px;
+      box-shadow: 0 4px 14px var(--primary-glow);
     }
 
     .brand-title h1 {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #ffffff, #93c5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text-main);
     }
 
     .brand-title p {
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--text-muted);
-      font-weight: 400;
+      font-weight: 500;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .badge-status {
@@ -119,11 +176,17 @@
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
       border-radius: 9999px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
+      color: #065f46;
+    }
+
+    [data-theme="dark"] .badge-status {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
       color: #34d399;
     }
 
@@ -142,10 +205,10 @@
     }
 
     .btn-secondary {
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       color: var(--text-main);
       border: 1px solid var(--border-subtle);
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 600;
@@ -153,39 +216,62 @@
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      box-shadow: var(--shadow-sm);
       transition: all 0.2s ease;
     }
 
     .btn-secondary:hover {
-      background: var(--bg-card-hover);
       border-color: var(--primary);
       color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--primary);
+      transform: scale(1.05);
     }
 
     /* Grid Layout */
     .main-grid {
       display: grid;
-      grid-template-columns: 460px 1fr;
-      gap: 28px;
+      grid-template-columns: 480px 1fr;
+      gap: 26px;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1080px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Glass Cards */
+    /* Cards */
     .glass-card {
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       padding: 24px;
-      box-shadow: var(--shadow-glass);
+      box-shadow: var(--shadow-card);
       position: relative;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .glass-card:hover {
+      box-shadow: var(--shadow-hover);
     }
 
     .card-title {
@@ -194,24 +280,24 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 18px;
-      color: #e2e8f0;
+      margin-bottom: 16px;
+      color: var(--text-main);
     }
 
     /* Input Tabs */
     .tabs-nav {
       display: flex;
-      gap: 8px;
-      background: rgba(10, 15, 29, 0.6);
+      gap: 6px;
+      background: var(--bg-elevated);
       padding: 4px;
       border-radius: var(--radius-sm);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       border: 1px solid var(--border-subtle);
     }
 
     .tab-btn {
       flex: 1;
-      padding: 10px;
+      padding: 9px;
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -222,14 +308,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       transition: all 0.2s ease;
     }
 
     .tab-btn.active {
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       color: var(--primary);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-sm);
     }
 
     /* Quick Sample Buttons */
@@ -241,63 +327,79 @@
     }
 
     .sample-pill {
-      font-size: 11px;
-      padding: 5px 10px;
+      font-size: 11.5px;
+      padding: 6px 11px;
       background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
       color: var(--text-muted);
       cursor: pointer;
+      font-weight: 600;
       transition: all 0.15s ease;
     }
 
     .sample-pill:hover {
       color: var(--primary);
       border-color: var(--primary);
-      background: rgba(56, 189, 248, 0.08);
+      background: var(--primary-glow);
     }
 
     /* Textarea */
     .clinical-textarea {
       width: 100%;
-      height: 200px;
-      background: rgba(10, 15, 29, 0.7);
+      height: 220px;
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       padding: 14px;
       font-family: inherit;
-      font-size: 13.5px;
+      font-size: 14px;
+      line-height: 1.6;
       color: var(--text-main);
       resize: vertical;
-      transition: border 0.2s;
+      transition: all 0.2s;
     }
 
     .clinical-textarea:focus {
       outline: none;
       border-color: var(--border-focus);
-      box-shadow: 0 0 16px var(--primary-glow);
+      box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
-    /* Audio Dropzone */
-    .dropzone {
+    /* Mic & Audio Dropzone */
+    .mic-recording-box {
       border: 2px dashed var(--border-subtle);
       border-radius: var(--radius-sm);
-      padding: 36px 20px;
+      padding: 28px 20px;
       text-align: center;
-      background: rgba(10, 15, 29, 0.4);
-      cursor: pointer;
-      transition: all 0.2s;
+      background: var(--bg-elevated);
       margin-bottom: 16px;
     }
 
-    .dropzone:hover {
-      border-color: var(--primary);
-      background: rgba(56, 189, 248, 0.04);
+    .btn-mic {
+      background: #ef4444;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+      transition: all 0.2s;
     }
 
-    .dropzone-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
+    .btn-mic.recording {
+      animation: micPulse 1.2s infinite;
+      background: #dc2626;
+    }
+
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      50% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
     }
 
     /* Options & Button */
@@ -309,12 +411,13 @@
     }
 
     .form-options label {
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--text-muted);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: 500;
     }
 
     .btn-primary {
@@ -331,13 +434,13 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
+      box-shadow: 0 4px 18px rgba(2, 132, 199, 0.35);
       transition: all 0.2s ease;
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(2, 132, 199, 0.55);
+      box-shadow: 0 6px 24px rgba(2, 132, 199, 0.45);
     }
 
     .btn-primary:disabled {
@@ -346,72 +449,76 @@
       transform: none;
     }
 
-    /* Results Panel */
+    /* Results Area */
     .results-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 22px;
     }
 
-    /* Highlighted Document Area */
     .document-preview {
-      background: rgba(10, 15, 29, 0.8);
+      background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       padding: 18px;
       font-size: 14.5px;
-      line-height: 1.8;
+      line-height: 1.9;
       min-height: 120px;
       margin-bottom: 18px;
-      position: relative;
+      color: var(--text-main);
     }
 
     /* Entity Badges */
     .entity-tag {
       display: inline-block;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-size: 12.5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 600;
-      margin: 0 2px;
-      border: 1px solid transparent;
+      margin: 0 3px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .entity-tag:hover {
+      transform: scale(1.05);
     }
 
     .entity-tag.medication {
       background: var(--med-bg);
-      color: #34d399;
-      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--med-color);
+      border: 1px solid var(--med-border);
     }
 
     .entity-tag.dosage {
       background: var(--dose-bg);
-      color: #a5b4fc;
-      border-color: rgba(99, 102, 241, 0.4);
+      color: var(--dose-color);
+      border: 1px solid var(--dose-border);
     }
 
     .entity-tag.condition, .entity-tag.history {
       background: var(--cond-bg);
-      color: #fbbf24;
-      border-color: rgba(245, 158, 11, 0.4);
+      color: var(--cond-color);
+      border: 1px solid var(--cond-border);
     }
 
     .entity-tag.administration, .entity-tag.route {
       background: var(--route-bg);
-      color: #22d3ee;
-      border-color: rgba(6, 182, 212, 0.4);
+      color: var(--route-color);
+      border: 1px solid var(--route-border);
     }
 
     .entity-tag.other {
       background: var(--event-bg);
-      color: #f472b6;
-      border-color: rgba(236, 72, 153, 0.4);
+      color: var(--event-color);
+      border: 1px solid var(--event-border);
     }
 
     /* Legend */
     .entity-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 16px;
     }
 
@@ -419,8 +526,19 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 11.5px;
+      font-size: 12px;
+      font-weight: 600;
       color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.15s;
+    }
+
+    .legend-item:hover {
+      border-color: var(--primary);
     }
 
     .legend-dot {
@@ -444,15 +562,17 @@
     }
 
     .soap-card {
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
-      padding: 16px;
-      transition: border-color 0.2s;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
     }
 
     .soap-card:hover {
-      border-color: rgba(56, 189, 248, 0.3);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-hover);
     }
 
     .soap-header {
@@ -460,8 +580,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .soap-tag {
@@ -472,21 +592,27 @@
       letter-spacing: 0.5px;
     }
 
-    .soap-tag.s { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
-    .soap-tag.o { background: rgba(129, 140, 248, 0.2); color: #818cf8; }
-    .soap-tag.a { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .soap-tag.p { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .soap-tag.s { background: #e0f2fe; color: #0369a1; }
+    .soap-tag.o { background: #ede9fe; color: #5b21b6; }
+    .soap-tag.a { background: #fef3c7; color: #b45309; }
+    .soap-tag.p { background: #dcfce7; color: #15803d; }
+
+    [data-theme="dark"] .soap-tag.s { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    [data-theme="dark"] .soap-tag.o { background: rgba(129, 140, 248, 0.2); color: #818cf8; }
+    [data-theme="dark"] .soap-tag.a { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    [data-theme="dark"] .soap-tag.p { background: rgba(16, 185, 129, 0.2); color: #34d399; }
 
     .soap-title {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
     }
 
     .soap-content {
       font-size: 13.5px;
-      color: #cbd5e1;
+      color: var(--text-muted);
       min-height: 50px;
+      line-height: 1.6;
     }
 
     /* Metrics Bar */
@@ -495,37 +621,48 @@
       align-items: center;
       gap: 18px;
       padding: 12px 18px;
-      background: rgba(10, 15, 29, 0.5);
+      background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       font-size: 12.5px;
       color: var(--text-muted);
-      margin-top: 14px;
+      margin-top: 16px;
+      flex-wrap: wrap;
     }
 
     .metric-item strong {
-      color: #f8fafc;
+      color: var(--text-main);
       font-weight: 700;
     }
 
-    /* JSON Drawer & Code */
-    .code-block {
-      background: #060913;
-      border: 1px solid var(--border-subtle);
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 20px;
       border-radius: var(--radius-sm);
-      padding: 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: #38bdf8;
-      max-height: 220px;
-      overflow: auto;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     /* Spinner */
     .spinner {
       width: 18px;
       height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: #ffffff;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -550,11 +687,17 @@
       <div class="header-actions">
         <div class="badge-status">
           <span class="status-dot"></span>
-          <span>Pipeline Ready</span>
+          <span>Pipeline Online</span>
         </div>
-        <a href="/docs" target="_blank" class="btn-secondary" id="docs-btn">
+        <button class="btn-secondary" onclick="shareAppLink()">
+          <span>🔗 Share Public Link</span>
+        </button>
+        <a href="/docs" target="_blank" class="btn-secondary">
           <span>📚 API Docs</span>
         </a>
+        <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+          <span>🌙</span>
+        </button>
       </div>
     </header>
 
@@ -572,7 +715,7 @@
             <span>📝 Text / Dictation</span>
           </button>
           <button class="tab-btn" id="tab-audio-btn" onclick="switchTab('audio')">
-            <span>🎤 Audio File</span>
+            <span>🎤 Live Mic / Audio</span>
           </button>
         </div>
 
@@ -593,13 +736,18 @@
 
         <!-- Audio Input Tab Pane -->
         <div id="pane-audio" style="display: none;">
-          <div class="dropzone" id="audio-dropzone" onclick="document.getElementById('audio-file-input').click()">
-            <div class="dropzone-icon">📁</div>
-            <strong style="font-size: 13.5px;">Click to select clinical audio</strong>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports WAV, MP3, FLAC (16kHz recommended)</p>
-            <input type="file" id="audio-file-input" accept="audio/*" style="display: none;" onchange="handleAudioSelect(this)">
+          <div class="mic-recording-box">
+            <button class="btn-mic" id="mic-btn" onclick="toggleMicrophone()">
+              <span id="mic-icon">🎙️</span>
+              <span id="mic-label">Record Doctor Consultation</span>
+            </button>
+            <div id="recording-timer" style="margin-top: 10px; font-size: 13px; font-weight: 700; color: #ef4444; display: none;">
+              🔴 Recording: <span id="timer-val">00:00</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;">Or upload pre-recorded audio file:</p>
+            <input type="file" id="audio-file-input" accept="audio/*" style="margin-top: 6px; font-size: 12px;" onchange="handleAudioSelect(this)">
+            <div id="audio-file-info" style="font-size: 12.5px; color: var(--primary); margin-top: 8px; display: none; font-weight: 600;"></div>
           </div>
-          <div id="audio-file-info" style="font-size: 12px; color: var(--primary); margin-bottom: 12px; display: none;"></div>
         </div>
 
         <!-- Options -->
@@ -613,7 +761,7 @@
         <!-- Run Action Button -->
         <button class="btn-primary" id="run-btn" onclick="runAnalysis()">
           <span id="btn-icon">⚡</span>
-          <span id="btn-text">Generate Clinical Insights</span>
+          <span id="btn-text">Extract Clinical Insights & SOAP Note</span>
         </button>
       </section>
 
@@ -621,26 +769,26 @@
       <section class="results-grid" aria-label="Results & Insights">
         <!-- Entities & Transcript Card -->
         <div class="glass-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <h2 class="card-title" style="margin-bottom: 0;">
               <span>🏷️ Extracted Medical Entities</span>
             </h2>
-            <span id="entity-counter" style="font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(56, 189, 248, 0.1); padding: 4px 10px; border-radius: 12px;">
+            <span id="entity-counter" style="font-size: 12px; font-weight: 700; color: var(--primary); background: var(--primary-glow); padding: 4px 10px; border-radius: 12px;">
               0 Entities Found
             </span>
           </div>
 
           <!-- Legend -->
           <div class="entity-legend">
-            <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span>Medication</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #6366f1;"></span>Dosage</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span>Condition/History</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #06b6d4;"></span>Administration/Route</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #059669;"></span>Medication</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #4f46e5;"></span>Dosage</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #d97706;"></span>Condition/History</div>
+            <div class="legend-item"><span class="legend-dot" style="background: #0891b2;"></span>Administration/Route</div>
           </div>
 
           <!-- Highlighted Text -->
           <div class="document-preview" id="highlighted-preview">
-            <em style="color: var(--text-dim);">Run an analysis to view parsed transcript with highlighted clinical entities...</em>
+            <em style="color: var(--text-dim);">Run an analysis to view parsed transcript with color-coded clinical entity highlights...</em>
           </div>
 
           <!-- Structured SOAP Note Section -->
@@ -689,18 +837,24 @@
           </div>
 
           <!-- Export & Action Bar -->
-          <div style="display: flex; gap: 12px; margin-top: 18px;">
+          <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
             <button class="btn-secondary" id="export-fhir-btn" onclick="exportFHIR()" style="flex: 1; justify-content: center;">
               <span>📦 Export HL7 FHIR R4 Bundle</span>
             </button>
             <button class="btn-secondary" id="copy-soap-btn" onclick="copySOAP()" style="flex: 1; justify-content: center;">
               <span>📋 Copy SOAP Note</span>
             </button>
+            <button class="btn-secondary" onclick="window.print()" style="justify-content: center;">
+              <span>🖨️ Print Report</span>
+            </button>
           </div>
         </div>
       </section>
     </main>
   </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast-msg"></div>
 
   <script>
     const SAMPLES = {
@@ -711,6 +865,34 @@
 
     let currentTab = 'text';
     let selectedAudioFile = null;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recordInterval = null;
+    let recordSeconds = 0;
+
+    // Theme Switcher (Default: Light Mode)
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      const target = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', target);
+      document.getElementById('theme-btn').innerText = target === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('clinscribe-theme', target);
+    }
+
+    // Share link helper
+    function shareAppLink() {
+      const url = window.location.origin;
+      navigator.clipboard.writeText(url);
+      showToast('🔗 Public link copied to clipboard: ' + url);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast-msg');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
 
     function switchTab(tab) {
       currentTab = tab;
@@ -729,13 +911,66 @@
       if (input.files && input.files[0]) {
         selectedAudioFile = input.files[0];
         const info = document.getElementById('audio-file-info');
-        info.innerText = `Selected: ${selectedAudioFile.name} (${Math.round(selectedAudioFile.size / 1024)} KB)`;
+        info.innerText = `📁 Selected: ${selectedAudioFile.name} (${Math.round(selectedAudioFile.size / 1024)} KB)`;
         info.style.display = 'block';
       }
     }
 
-    // Pre-load Sample 1
+    // In-browser Microphone Recording
+    async function toggleMicrophone() {
+      const micBtn = document.getElementById('mic-btn');
+      const micLabel = document.getElementById('mic-label');
+      const timerBox = document.getElementById('recording-timer');
+      const timerVal = document.getElementById('timer-val');
+
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          
+          mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunks, { type: 'audio/wav' });
+            selectedAudioFile = new File([blob], "mic_consultation.wav", { type: "audio/wav" });
+            const info = document.getElementById('audio-file-info');
+            info.innerText = `🎙️ Audio recorded: mic_consultation.wav (${Math.round(blob.size / 1024)} KB)`;
+            info.style.display = 'block';
+            stream.getTracks().forEach(track => track.stop());
+            showToast('✅ Consultation audio captured! Ready to analyze.');
+          };
+
+          mediaRecorder.start();
+          micBtn.classList.add('recording');
+          micLabel.innerText = 'Stop Recording';
+          timerBox.style.display = 'block';
+          recordSeconds = 0;
+          recordInterval = setInterval(() => {
+            recordSeconds++;
+            const m = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+            const s = String(recordSeconds % 60).padStart(2, '0');
+            timerVal.innerText = `${m}:${s}`;
+          }, 1000);
+        } catch (err) {
+          alert('Microphone access denied or not supported in this browser: ' + err.message);
+        }
+      } else {
+        mediaRecorder.stop();
+        micBtn.classList.remove('recording');
+        micLabel.innerText = 'Record Doctor Consultation';
+        clearInterval(recordInterval);
+        timerBox.style.display = 'none';
+      }
+    }
+
+    // Pre-load Sample 1 & check saved theme
     window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('clinscribe-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('theme-btn').innerText = savedTheme === 'light' ? '🌙' : '☀️';
       loadSample(1);
     });
 
@@ -759,7 +994,6 @@
             return;
           }
 
-          // Call NER endpoint
           const nerRes = await fetch('/extract-entities', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -767,7 +1001,6 @@
           });
           const nerData = await nerRes.json();
 
-          // Call Summarize endpoint
           const sumRes = await fetch('/summarize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -778,7 +1011,7 @@
           renderResults(text, nerData.entities, sumData, performance.now() - startTime, 'Text NLP');
         } else {
           if (!selectedAudioFile) {
-            alert('Please select an audio file first.');
+            alert('Please record with the microphone or select an audio file first.');
             return;
           }
 
@@ -791,27 +1024,24 @@
             body: formData
           });
           const data = await res.json();
-          renderResults(data.transcript, data.entities, { soap: data.soap, summary: data.summary }, performance.now() - startTime, 'End-to-End Audio');
+          renderResults(data.transcript, data.entities, { soap: data.soap, summary: data.summary }, performance.now() - startTime, 'Speech ASR + NLP');
         }
       } catch (err) {
         console.error('Analysis error:', err);
         alert('Error connecting to pipeline: ' + err.message);
       } finally {
         btn.disabled = false;
-        btnText.innerText = 'Generate Clinical Insights';
+        btnText.innerText = 'Extract Clinical Insights & SOAP Note';
         btnIcon.innerText = '⚡';
       }
     }
 
     function renderResults(transcript, entities, summaryData, latencyMs, mode) {
-      // 1. Counter
       document.getElementById('entity-counter').innerText = `${entities.length} Entities Found`;
 
-      // 2. Highlighting
       const preview = document.getElementById('highlighted-preview');
       let annotated = transcript;
 
-      // Sort entities descending by length to avoid partial replacements
       const sorted = [...entities].sort((a, b) => b.text.length - a.text.length);
       sorted.forEach(ent => {
         let cls = 'other';
@@ -821,23 +1051,22 @@
         else if (lbl.includes('cond') || lbl.includes('hist') || lbl.includes('disease') || lbl.includes('symptom')) cls = 'condition';
         else if (lbl.includes('admin') || lbl.includes('route') || lbl.includes('oral')) cls = 'administration';
 
-        const tag = `<span class="entity-tag ${cls}" title="${ent.label} (${Math.round((ent.score||0)*100)}%)">${ent.text}</span>`;
+        const tag = `<span class="entity-tag ${cls}" title="${ent.label} (Score: ${Math.round((ent.score||0)*100)}%)">${ent.text}</span>`;
         annotated = annotated.replace(new RegExp(`\\b${ent.text}\\b`, 'gi'), tag);
       });
       preview.innerHTML = annotated;
 
-      // 3. SOAP Note
       const soap = summaryData.soap || {};
       document.getElementById('soap-s').innerText = soap.S || 'No subjective complaints recorded.';
       document.getElementById('soap-o').innerText = soap.O || 'No objective findings recorded.';
       document.getElementById('soap-a').innerText = soap.A || summaryData.summary || 'Clinical assessment pending.';
       document.getElementById('soap-p').innerText = soap.P || 'Continue current management plan.';
 
-      // 4. Metrics Bar
       document.getElementById('latency-val').innerText = `${(latencyMs / 1000).toFixed(2)}s`;
       document.getElementById('words-val').innerText = transcript.split(/\s+/).length;
       document.getElementById('mode-val').innerText = mode;
       document.getElementById('metrics-bar').style.display = 'flex';
+      showToast('✨ Analysis complete! Extracted ' + entities.length + ' entities.');
     }
 
     async function exportFHIR() {
@@ -861,6 +1090,7 @@
         document.body.appendChild(dl);
         dl.click();
         dl.remove();
+        showToast('📦 HL7 FHIR R4 Bundle downloaded successfully!');
       } catch (err) {
         alert('FHIR export error: ' + err.message);
       }
@@ -873,7 +1103,7 @@
       const p = document.getElementById('soap-p').innerText;
       const note = `CLINICAL SOAP NOTE\n==================\n\n[SUBJECTIVE]\n${s}\n\n[OBJECTIVE]\n${o}\n\n[ASSESSMENT]\n${a}\n\n[PLAN]\n${p}\n`;
       navigator.clipboard.writeText(note);
-      alert('✅ Clinical SOAP Note copied to clipboard!');
+      showToast('📋 Clinical SOAP Note copied to clipboard!');
     }
   </script>
 </body>
