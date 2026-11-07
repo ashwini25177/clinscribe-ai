@@ -298,3 +298,4 @@ class FHIRR4Exporter:
             resource["dosageInstruction"].append(instruction)
 
         return resource
+

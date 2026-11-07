@@ -64,3 +64,4 @@ jobs:
           context: .
           push: false
           tags: clinscribe-ai:latest
+
